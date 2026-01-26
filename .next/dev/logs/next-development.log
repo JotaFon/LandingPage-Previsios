@@ -1,0 +1,24 @@
+[00:00:01.386] Server  LOG     ✓ Ready in 839ms
+[00:00:08.198] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:46.313] Server  LOG     ✓ Compiled in 624ms
+[00:03:21.669] Server  LOG     ✓ Compiled in 174ms
+[00:04:02.871] Server  LOG     ✓ Compiled in 149ms
+[00:04:16.741] Server  LOG     ✓ Compiled in 151ms
+[00:04:26.582] Server  LOG     ✓ Compiled in 63ms
+[00:04:50.181] Server  LOG     ✓ Compiled in 137ms
+[00:05:11.576] Server  LOG     ✓ Compiled in 145ms
+[00:05:53.857] Server  LOG     ✓ Compiled in 136ms
+[00:06:16.387] Server  LOG     ✓ Compiled in 132ms
+[00:06:55.694] Server  LOG     ✓ Compiled in 139ms
+[00:06:59.561] Server  LOG     ✓ Compiled in 71ms
+[00:08:01.444] Server  LOG     ✓ Compiled in 130ms
+[00:16:54.103] Server  LOG     ✓ Compiled in 415ms
+[00:17:09.715] Server  LOG     ✓ Compiled in 300ms
+[00:17:19.535] Server  LOG     ✓ Compiled in 113ms
+[00:17:33.756] Server  LOG     ✓ Compiled in 36ms
+[00:20:14.922] Server  LOG     ✓ Compiled in 862ms
+[00:20:36.908] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:26:52.023] Server  LOG     ✓ Compiled in 247ms
+[00:27:01.178] Browser ERROR   uncaughtError: TypeError: Cannot read properties of undefined (reading 'appendChild')
+[00:27:01.178] Browser ERROR   uncaughtError: Error: Map container is being reused by another instance
+[00:27:27.052] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
