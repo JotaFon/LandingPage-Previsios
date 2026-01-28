@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import { contact as styles } from "@/styles/components";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -12,53 +13,106 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError("");
 
-    // Simula envio - aqui você integraria com seu backend
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    if (!formData.name.trim()) {
+      setError("Informe seu nome completo");
+      setIsSubmitting(false);
+      return;
+    }
 
-    setIsSubmitting(false);
-    setSubmitted(true);
-    setFormData({ name: "", email: "", company: "", phone: "", message: "" });
+    if (!/^[A-Za-zÀ-ÿ\s]+$/.test(formData.name)) {
+      setError("O nome não pode conter números ou símbolos");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.email.includes("@")) {
+      setError("Informe um e-mail válido");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.company.trim()) {
+      setError("Informe o nome da empresa");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.phone && formData.phone.length !== 11) {
+      setError("O telefone deve conter exatamente 11 números");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Erro ao enviar mensagem");
+        return;
+      }
+
+      setSubmitted(true);
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        phone: "",
+        message: "",
+      });
+    } catch (err) {
+      setError(
+        "Não foi possível enviar a mensagem agora. Tente novamente em instantes.",
+      );
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <section id="contato" className="relative py-24 md:py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-20" />
-      <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-primary-600/10 rounded-full blur-[150px]" />
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-secondary-600/10 rounded-full blur-[120px]" />
+    <section id="contato" className={styles.section}>
+      <div className={styles.gridPattern} />
+      <div className={styles.orbLeft} />
+      <div className={styles.orbRight} />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left Content */}
+      <div className={styles.container}>
+        <div className={styles.grid}>
           <div>
-            <span className="inline-block px-4 py-1.5 bg-primary-500/10 border border-primary-500/20 rounded-full text-primary-400 text-sm font-medium mb-6">
-              Entre em Contato
-            </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            <span className={styles.badge}>Entre em Contato</span>
+            <h2 className={styles.title}>
               Pronto para{" "}
-              <span className="gradient-text">transformar</span> sua gestão
-              hídrica?
+              <span className={styles.titleGradient}>transformar</span> sua
+              gestão hídrica?
             </h2>
-            <p className="text-lg text-gray-400 mb-8">
-              Entre em contato conosco e descubra como o PREVISIOS pode
-              otimizar suas operações de saneamento com inteligência artificial.
+            <p className={styles.description}>
+              Entre em contato conosco e descubra como a PREVISIOS pode otimizar
+              suas operações de saneamento.
             </p>
 
-            {/* Benefits List */}
-            <div className="space-y-4">
+            <div className={styles.benefitsList}>
               {[
-                "Atendimento personalizado para sua empresa",
+                "Atendimento personalizado",
                 "Análise gratuita do potencial de economia",
                 "Suporte técnico especializado",
                 "Implementação rápida e sem interrupções",
               ].map((benefit, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
+                <div key={index} className={styles.benefitItem}>
+                  <div className={styles.benefitIcon}>
                     <svg
                       className="w-3 h-3 text-white"
                       fill="none"
@@ -73,46 +127,40 @@ export default function Contact() {
                       />
                     </svg>
                   </div>
-                  <span className="text-gray-300">{benefit}</span>
+                  <span className={styles.benefitText}>{benefit}</span>
                 </div>
               ))}
             </div>
 
-            {/* Contact Info */}
-            <div className="mt-10 pt-10 border-t border-dark-700/50">
-              <p className="text-sm text-gray-400 mb-4">
+            <div className={styles.contactInfo}>
+              <p className={styles.contactLabel}>
                 Prefere falar diretamente conosco?
               </p>
-              <div className="flex flex-wrap gap-6">
-                <a
-                  href="mailto:contato@previsios.com.br"
-                  className="flex items-center gap-2 text-gray-300 hover:text-primary-400 transition-colors"
+              <div className={styles.contactLinks}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    />
-                  </svg>
-                  contato@previsios.com.br
-                </a>
+                  <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                </svg>
+                contato@previsios.com.br
               </div>
             </div>
           </div>
 
-          {/* Right Content - Form */}
           <div className="relative">
-            <div className="glass-card p-8 md:p-10">
+            <div className={styles.formCard}>
               {submitted ? (
                 <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
+                  <div className={styles.successIcon}>
                     <svg
                       className="w-8 h-8 text-white"
                       fill="none"
@@ -127,27 +175,27 @@ export default function Contact() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    Mensagem Enviada!
-                  </h3>
-                  <p className="text-gray-400">
+                  <h3 className={styles.successTitle}>Mensagem Enviada!</h3>
+                  <p className={styles.successText}>
                     Entraremos em contato em breve.
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
-                    className="mt-6 text-primary-400 hover:text-primary-300 transition-colors"
+                    className={styles.successButton}
                   >
                     Enviar outra mensagem
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid sm:grid-cols-2 gap-6">
+                <form
+                  onSubmit={handleSubmit}
+                  className={styles.form}
+                  noValidate
+                >
+                  {error && <div className={styles.errorBox}>{error}</div>}
+                  <div className={styles.inputGrid}>
                     <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium text-gray-300 mb-2"
-                      >
+                      <label htmlFor="name" className={styles.label}>
                         Nome completo *
                       </label>
                       <input
@@ -155,18 +203,19 @@ export default function Contact() {
                         id="name"
                         required
                         value={formData.name}
-                        onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
-                        }
-                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                        onChange={(e) => {
+                          const onlyLetters = e.target.value.replace(
+                            /[^A-Za-zÀ-ÿ\s]/g,
+                            "",
+                          );
+                          setFormData({ ...formData, name: onlyLetters });
+                        }}
+                        className={styles.input}
                         placeholder="Seu nome"
                       />
                     </div>
                     <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-300 mb-2"
-                      >
+                      <label htmlFor="email" className={styles.label}>
                         E-mail corporativo *
                       </label>
                       <input
@@ -177,18 +226,15 @@ export default function Contact() {
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
                         }
-                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                        className={styles.input}
                         placeholder="seu@empresa.com"
                       />
                     </div>
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-6">
+                  <div className={styles.inputGrid}>
                     <div>
-                      <label
-                        htmlFor="company"
-                        className="block text-sm font-medium text-gray-300 mb-2"
-                      >
+                      <label htmlFor="company" className={styles.label}>
                         Empresa *
                       </label>
                       <input
@@ -199,35 +245,35 @@ export default function Contact() {
                         onChange={(e) =>
                           setFormData({ ...formData, company: e.target.value })
                         }
-                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                        className={styles.input}
                         placeholder="Nome da empresa"
                       />
                     </div>
                     <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium text-gray-300 mb-2"
-                      >
+                      <label htmlFor="phone" className={styles.label}>
                         Telefone
                       </label>
                       <input
                         type="tel"
                         id="phone"
+                        inputMode="numeric"
+                        maxLength={11}
                         value={formData.phone}
-                        onChange={(e) =>
-                          setFormData({ ...formData, phone: e.target.value })
-                        }
-                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                        onChange={(e) => {
+                          const onlyNumbers = e.target.value.replace(/\D/g, "");
+                          setFormData({
+                            ...formData,
+                            phone: onlyNumbers.slice(0, 11),
+                          });
+                        }}
+                        className={styles.input}
                         placeholder="(00) 00000-0000"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-gray-300 mb-2"
-                    >
+                    <label htmlFor="message" className={styles.label}>
                       Mensagem
                     </label>
                     <textarea
@@ -237,7 +283,7 @@ export default function Contact() {
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-dark-700/50 border border-dark-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors resize-none"
+                      className={styles.textarea}
                       placeholder="Conte-nos sobre suas necessidades..."
                     />
                   </div>
@@ -245,7 +291,7 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/25 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className={styles.submitButton}
                   >
                     {isSubmitting ? (
                       <>
@@ -290,7 +336,7 @@ export default function Contact() {
                     )}
                   </button>
 
-                  <p className="text-xs text-gray-500 text-center">
+                  <p className={styles.disclaimer}>
                     Ao enviar, você concorda com nossa política de privacidade.
                   </p>
                 </form>

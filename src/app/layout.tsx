@@ -12,8 +12,6 @@ export const metadata: Metadata = {
     "previsão",
     "bombas de água",
     "reservatório",
-    "sabesp",
-    "sanepar",
   ],
   authors: [{ name: "PREVISIOS" }],
   openGraph: {

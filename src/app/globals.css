@@ -1,52 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
-/* Custom theme variables */
+/* Custom theme variables - Design Board PREVISIOS */
 @theme {
-  /* Primary - tons de água */
-  --color-primary-50: #e6f7ff;
-  --color-primary-100: #b3e5fc;
-  --color-primary-200: #81d4fa;
-  --color-primary-300: #4fc3f7;
-  --color-primary-400: #29b6f6;
-  --color-primary-500: #03a9f4;
-  --color-primary-600: #039be5;
-  --color-primary-700: #0288d1;
-  --color-primary-800: #0277bd;
-  --color-primary-900: #01579b;
+  /*
+   * PALETA DE CORES OFICIAL
+   * Azul Profundo: #022e7b
+   * Azul Médio: #0162b1
+   * Ciano Claro: #07a8da
+   * Ciano Teal: #62cfd1
+   */
 
-  /* Secondary - tons de verde água */
-  --color-secondary-50: #e0f7f4;
-  --color-secondary-100: #b3ebe3;
-  --color-secondary-200: #80ded1;
-  --color-secondary-300: #4dd1bf;
-  --color-secondary-400: #26c6b0;
-  --color-secondary-500: #00bfa5;
-  --color-secondary-600: #00b89a;
-  --color-secondary-700: #00a88f;
-  --color-secondary-800: #009884;
-  --color-secondary-900: #007a6c;
+  /* Primary - Azuis Profundos */
+  --color-primary-50: #e6eef8;
+  --color-primary-100: #b3cce8;
+  --color-primary-200: #80a9d8;
+  --color-primary-300: #4d87c8;
+  --color-primary-400: #2670bc;
+  --color-primary-500: #0162b1;
+  --color-primary-600: #0156a0;
+  --color-primary-700: #01488a;
+  --color-primary-800: #013a73;
+  --color-primary-900: #022e7b;
 
-  /* Dark - tons escuros */
-  --color-dark-50: #e8eaf1;
-  --color-dark-100: #c5c9d9;
-  --color-dark-200: #9fa6bf;
-  --color-dark-300: #7882a4;
-  --color-dark-400: #5b6890;
-  --color-dark-500: #3e4d7c;
-  --color-dark-600: #374571;
-  --color-dark-700: #2d3a63;
-  --color-dark-800: #243055;
-  --color-dark-900: #0f172a;
+  /* Secondary - Cianos */
+  --color-secondary-50: #e6f7fb;
+  --color-secondary-100: #b3e8f3;
+  --color-secondary-200: #80d9eb;
+  --color-secondary-300: #62cfd1;
+  --color-secondary-400: #35c0de;
+  --color-secondary-500: #07a8da;
+  --color-secondary-600: #0697c4;
+  --color-secondary-700: #0584ac;
+  --color-secondary-800: #047194;
+  --color-secondary-900: #035e7c;
 
-  /* Font family */
-  --font-sans: "Inter", system-ui, sans-serif;
+  /* Dark - tons escuros com mais contraste */
+  --color-dark-50: #e6eaf3;
+  --color-dark-100: #c0c9de;
+  --color-dark-200: #96a5c6;
+  --color-dark-300: #6c81ae;
+  --color-dark-400: #4d669c;
+  --color-dark-500: #2e4b8a;
+  --color-dark-600: #1e3a6e;
+  --color-dark-700: #152952;
+  --color-dark-800: #0d1a35;
+  --color-dark-900: #060e1f;
+  --color-dark-950: #030812;
+
+  /* Font families */
+  --font-sans: "Open Sans", system-ui, sans-serif;
+  --font-heading: "Montserrat", system-ui, sans-serif;
 
   /* Animations */
   --animate-fade-in: fadeIn 0.5s ease-in-out;
   --animate-slide-up: slideUp 0.6s ease-out;
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-float: float 6s ease-in-out infinite;
 }
 
 @keyframes fadeIn {
@@ -59,48 +68,12 @@
   100% { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-/* Animação de boiar na água - bem suave */
 @keyframes floatOnWater {
   0%, 100% {
     transform: translateY(0);
   }
   50% {
     transform: translateY(-6px);
-  }
-}
-
-@keyframes wave {
-  0%, 100% {
-    transform: translateY(0) scaleY(1);
-  }
-  50% {
-    transform: translateY(-10px) scaleY(1.05);
-  }
-}
-
-/* Animações de água */
-@keyframes bubble {
-  0% {
-    bottom: -20px;
-    opacity: 0;
-    transform: translateX(0) scale(0.5);
-  }
-  10% {
-    opacity: 0.8;
-    transform: translateX(0) scale(1);
-  }
-  50% {
-    transform: translateX(20px) scale(1.1);
-  }
-  100% {
-    bottom: 100%;
-    opacity: 0;
-    transform: translateX(-10px) scale(0.8);
   }
 }
 
@@ -131,32 +104,11 @@
   }
 }
 
-@keyframes droplet {
-  0% {
-    top: -30px;
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.7;
-  }
-  90% {
-    opacity: 0.7;
-  }
-  100% {
-    top: 100%;
-    opacity: 0;
-  }
-}
-
-@keyframes ripple {
-  0% {
-    transform: scale(0.5);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(2.5);
-    opacity: 0;
-  }
+@keyframes dataStream {
+  0% { transform: translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(400%); opacity: 0; }
 }
 
 @keyframes floatParticle {
@@ -184,54 +136,42 @@ html {
 }
 
 body {
-  background-color: var(--color-dark-900);
+  background-color: var(--color-dark-950);
   color: white;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
 /* Custom utilities */
+@utility font-heading {
+  font-family: var(--font-heading);
+}
+
 @utility gradient-text {
-  background: linear-gradient(to right, var(--color-primary-400), var(--color-secondary-400), var(--color-primary-300));
+  background: linear-gradient(135deg, var(--color-secondary-500), var(--color-secondary-300), var(--color-primary-400));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 @utility glass-card {
-  background-color: rgb(36 48 85 / 0.5);
+  background-color: rgb(13 26 53 / 0.7);
   backdrop-filter: blur(24px);
-  border: 1px solid rgb(45 58 99 / 0.5);
+  border: 1px solid rgb(30 58 110 / 0.5);
   border-radius: 1rem;
-}
-
-@utility glow-primary {
-  box-shadow: 0 0 40px -10px var(--color-primary-500);
-}
-
-@utility glow-secondary {
-  box-shadow: 0 0 40px -10px var(--color-secondary-500);
-}
-
-@utility animate-wave {
-  animation: wave 8s ease-in-out infinite;
-}
-
-@utility animate-wave-delay {
-  animation: wave 8s ease-in-out infinite;
-  animation-delay: -4s;
 }
 
 @utility bg-grid-pattern {
   background-image:
-    linear-gradient(to right, rgb(45 58 99 / 0.3) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(45 58 99 / 0.3) 1px, transparent 1px);
+    linear-gradient(to right, rgb(1 98 177 / 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(1 98 177 / 0.15) 1px, transparent 1px);
   background-size: 60px 60px;
-}
-
-/* Animações de água - utilities */
-@utility animate-bubble {
-  animation: bubble 15s ease-in-out infinite;
 }
 
 @utility animate-wave-slow {
@@ -246,27 +186,6 @@ body {
   animation: waveFast 12s linear infinite;
 }
 
-@utility animate-droplet {
-  animation: droplet 4s ease-in-out infinite;
-}
-
-@utility animate-ripple {
-  animation: ripple 4s ease-out infinite;
-}
-
 @utility animate-float-particle {
   animation: floatParticle 20s ease-in-out infinite;
-}
-
-@utility animation-delay-1000 {
-  animation-delay: 1s;
-}
-
-@utility animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-/* Animação de boiar na água */
-@utility animate-float-on-water {
-  animation: floatOnWater 3s ease-in-out infinite;
 }

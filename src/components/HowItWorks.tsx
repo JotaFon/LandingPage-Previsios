@@ -1,5 +1,7 @@
 "use client";
 
+import { howItWorks as styles } from "@/styles/components";
+
 const steps = [
   {
     number: "01",
@@ -7,12 +9,7 @@ const steps = [
     description:
       "Conectamos com seus sistemas existentes e sensores IoT para coletar dados em tempo real de toda a operação.",
     icon: (
-      <svg
-        className="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg className="w-8 h-8" fill="none" stroke="#fff" viewBox="0 0 24 24">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -26,14 +23,9 @@ const steps = [
     number: "02",
     title: "Análise com IA",
     description:
-      "Nossos modelos de Machine Learning processam os dados, identificam padrões e geram previsões precisas.",
+      "Nossos modelos de Machine Learning processam os dados e geram previsões precisas.",
     icon: (
-      <svg
-        className="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg className="w-8 h-8" fill="none" stroke="#fff" viewBox="0 0 24 24">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -49,12 +41,7 @@ const steps = [
     description:
       "Receba alertas, recomendações e relatórios personalizados para tomar decisões informadas rapidamente.",
     icon: (
-      <svg
-        className="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg className="w-8 h-8" fill="none" stroke="#fff" viewBox="0 0 24 24">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -68,14 +55,9 @@ const steps = [
     number: "04",
     title: "Otimização Contínua",
     description:
-      "O sistema aprende continuamente com novos dados, melhorando suas previsões e recomendações ao longo do tempo.",
+      "O sistema aprende continuamente, melhorando suas previsões e recomendações ao longo do tempo.",
     icon: (
-      <svg
-        className="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg className="w-8 h-8" fill="none" stroke="#fff" viewBox="0 0 24 24">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -89,61 +71,39 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section
-      id="como-funciona"
-      className="relative py-24 md:py-32 bg-dark-800/30"
-    >
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+    <section id="como-funciona" className={styles.section}>
+      <div className={styles.gridPattern} />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16 md:mb-20">
-          <span className="inline-block px-4 py-1.5 bg-secondary-500/10 border border-secondary-500/20 rounded-full text-secondary-400 text-sm font-medium mb-4">
-            Como Funciona
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <span className={styles.badge}>Como Funciona</span>
+          <h2 className={styles.title}>
             Da coleta de dados até a{" "}
-            <span className="gradient-text">ação inteligente</span>
+            <span className={styles.titleGradient}>ação inteligente</span>
           </h2>
-          <p className="max-w-2xl mx-auto text-lg text-gray-400">
+          <p className={styles.description}>
             Um processo simplificado que transforma dados brutos em inteligência
             operacional para sua empresa de saneamento.
           </p>
         </div>
 
-        {/* Steps */}
-        <div className="relative">
-          {/* Connection Line */}
-          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-600/50 via-secondary-500/50 to-primary-600/50 -translate-y-1/2" />
+        <div className={styles.stepsContainer}>
+          <div className={styles.connectionLine} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className={styles.grid}>
             {steps.map((step, index) => (
-              <div key={index} className="relative">
-                {/* Card */}
-                <div className="relative glass-card p-6 text-center h-full hover:bg-dark-700/50 transition-all duration-300 group">
-                  {/* Step Number */}
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-xs font-bold text-white z-10">
-                    {step.number}
-                  </div>
+              <div key={index} className={styles.stepWrapper}>
+                <div className={styles.card}>
+                  <div className={styles.stepNumber}>{step.number}</div>
 
-                  {/* Icon */}
-                  <div className="w-16 h-16 mx-auto mt-4 mb-6 bg-dark-700/50 rounded-2xl flex items-center justify-center text-primary-400 group-hover:scale-110 group-hover:bg-primary-500/20 transition-all duration-300">
-                    {step.icon}
-                  </div>
+                  <div className={styles.iconWrapper}>{step.icon}</div>
 
-                  {/* Content */}
-                  <h3 className="text-xl font-semibold text-white mb-3">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">
-                    {step.description}
-                  </p>
+                  <h3 className={styles.stepTitle}>{step.title}</h3>
+                  <p className={styles.stepDescription}>{step.description}</p>
                 </div>
 
-                {/* Arrow for mobile/tablet */}
                 {index < steps.length - 1 && (
-                  <div className="lg:hidden flex justify-center my-4">
+                  <div className={styles.mobileArrow}>
                     <svg
                       className="w-6 h-6 text-primary-500"
                       fill="none"

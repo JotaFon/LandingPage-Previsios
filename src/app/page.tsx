@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
-import MapDemo from "@/components/MapDemo";
+import DemoCarousel from "@/components/DemoCarousel";
 import HowItWorks from "@/components/HowItWorks";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
@@ -13,7 +13,7 @@ export default function Home() {
       <main>
         <Hero />
         <Features />
-        <MapDemo />
+        <DemoCarousel />
         <HowItWorks />
         <Contact />
       </main>
