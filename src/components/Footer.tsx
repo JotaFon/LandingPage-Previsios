@@ -34,7 +34,7 @@ export default function Footer() {
             <a href="#" className={styles.logo}>
               <Image
                 src={previsiosLogo}
-                alt="PREVISIOS Logo"
+                alt="PREVISIOS - Página inicial"
                 width={44}
                 height={44}
               />
@@ -61,7 +61,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className={styles.sectionTitle}>Links Rápidos</h4>
+            <h3 className={styles.sectionTitle}>Links Rápidos</h3>
             <ul className={styles.linkList}>
               {quickLinks.map((link) => (
                 <li key={link.href}>
@@ -74,7 +74,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className={styles.sectionTitle}>Contato</h4>
+            <h3 className={styles.sectionTitle}>Contato</h3>
             <ul className={styles.linkList}>
               <li>
                 <a

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState, useCallback } from "react";
 import { WaterParticles, DataStreams } from "./WaterEffects";
 import { features as styles } from "@/styles/components";
 
@@ -120,9 +121,10 @@ const featuresList = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" />
-        <path d="M12 15h.01" />
-        <path d="M12 7v4" />
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.3-4.3" />
+        <path d="M11 7v4" />
+        <path d="M11 15h.01" />
       </svg>
     ),
     title: "Detecção de Anomalias",
@@ -155,6 +157,190 @@ const featuresList = [
   },
 ];
 
+function MobileCarousel() {
+  const total = featuresList.length;
+  const [current, setCurrent] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef(0);
+  const dragStartTime = useRef(0);
+  const [snapTo, setSnapTo] = useState<null | number>(null);
+
+  const CARD_WIDTH = 270;
+  const SIDE_OFFSET = 200;
+
+  const getIndex = (i: number) => ((i % total) + total) % total;
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    setIsDragging(true);
+    dragStart.current = e.touches[0].clientX;
+    dragStartTime.current = Date.now();
+    setDragOffset(0);
+  }, []);
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const diff = e.touches[0].clientX - dragStart.current;
+      setDragOffset(diff);
+    },
+    [isDragging],
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    if (!isDragging) return;
+    setIsDragging(false);
+
+    const velocity =
+      dragOffset / Math.max(1, Date.now() - dragStartTime.current);
+    const threshold = CARD_WIDTH * 0.2;
+
+    let direction = 0;
+
+    if (dragOffset > threshold || velocity > 0.5) {
+      direction = 1;
+    } else if (dragOffset < -threshold || velocity < -0.3) {
+      direction = -1;
+    }
+
+    setSnapTo(direction);
+
+    setTimeout(() => {
+      if (direction === 1) {
+        setCurrent((prev) => getIndex(prev - 1));
+      } else if (direction === -1) {
+        setCurrent((prev) => getIndex(prev + 1));
+      }
+
+      setDragOffset(0);
+      setSnapTo(null);
+    }, 400);
+  }, [isDragging, dragOffset, getIndex]);
+
+  const effectiveOffset = snapTo !== null ? snapTo * SIDE_OFFSET : dragOffset;
+
+  const dragProgress = Math.max(-1, Math.min(1, effectiveOffset / SIDE_OFFSET));
+
+  const getCardStyle = (position: number) => {
+    const p = position + dragProgress;
+    const absP = Math.abs(p);
+
+    const translateX = p * SIDE_OFFSET;
+    const translateY = absP * -40;
+    const translateZ = -absP * 100;
+
+    const rotateY = p * -15;
+    const rotateX = absP * 2;
+
+    const scale = Math.max(0.65, 1 - absP * 0.2);
+    const opacity = Math.max(0, 1 - absP * 0.2);
+    const zIndex = 10 - Math.round(absP * 4);
+
+    return {
+      width: CARD_WIDTH,
+      left: "50%",
+      transform: `
+      translateX(calc(-50% + ${translateX}px))
+      translateY(${translateY}px)
+      perspective(800px)
+      rotateY(${rotateY}deg)
+      rotateX(${rotateX}deg)
+      translateZ(${translateZ}px)
+      scale(${scale})
+    `,
+      opacity,
+      zIndex,
+      transition: isDragging
+        ? "none"
+        : "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+    };
+  };
+
+  const visiblePositions = [-2, -1, 0, 1, 2];
+
+  return (
+    <div className="md:hidden">
+      <div
+        className="relative overflow-hidden"
+        style={{ height: 280, perspective: 800, touchAction: "pan-y" }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ transformStyle: "preserve-3d" }}
+        >
+          {visiblePositions.map((pos) => {
+            const idx = getIndex(current + pos);
+            const feature = featuresList[idx];
+            const cardStyle = getCardStyle(pos);
+
+            return (
+              <div
+                key={`${current}-${pos}`}
+                className="absolute glass-card p-5 flex flex-col"
+                style={cardStyle}
+              >
+                <div className={styles.cardIcon(feature.gradient)}>
+                  {feature.icon}
+                </div>
+                <h3 className={styles.cardTitle}>{feature.title}</h3>
+                <p className={styles.cardDescription}>{feature.description}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center gap-1.5 mt-4">
+        <svg
+          className="mr-15"
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#fff"
+          stroke-width="1"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m12 19-7-7 7-7" />
+          <path d="M19 12H5" />
+        </svg>
+        {featuresList.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrent(i)}
+            className={`h-1 w-3 rounded-full transition-all duration-400 origin-center ${
+              i === current
+                ? "w-4 bg-gradient-to-r from-[#0162b1] to-[#07a8da] scale-x-100"
+                : "w-2 bg-dark-600 scale-x-50"
+            }`}
+          />
+        ))}
+        <svg
+          className="ml-15"
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#fff"
+          stroke-width="1"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 12h14" />
+          <path d="m12 5 7 7-7 7" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export default function Features() {
   return (
     <section id="features" className={styles.section}>
@@ -162,7 +348,7 @@ export default function Features() {
       <div className={styles.orb} />
 
       <DataStreams />
-      <WaterParticles count={15} />
+      <WaterParticles count={8} />
 
       <div className={styles.container}>
         <div className={styles.header}>
@@ -178,7 +364,9 @@ export default function Features() {
           </p>
         </div>
 
-        <div className={styles.grid}>
+        <MobileCarousel />
+
+        <div className={`hidden md:grid ${styles.grid}`}>
           {featuresList.map((feature, index) => (
             <div key={index} className={styles.card}>
               <div className={styles.cardIcon(feature.gradient)}>

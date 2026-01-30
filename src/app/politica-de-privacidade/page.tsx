@@ -1,10 +1,15 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { legal as styles } from "@/styles/components";
 
-export const metadata = {
-  title: "Política de Privacidade - PREVISIOS",
-  description: "Política de Privacidade da plataforma PREVISIOS",
+export const metadata: Metadata = {
+  title: "Política de Privacidade",
+  description:
+    "Política de Privacidade da plataforma PREVISIOS. Saiba como coletamos, usamos e protegemos seus dados pessoais em conformidade com a LGPD.",
+  alternates: {
+    canonical: "/politica-de-privacidade",
+  },
 };
 
 export default function PoliticaDePrivacidade() {

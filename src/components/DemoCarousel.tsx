@@ -96,8 +96,9 @@ export default function DemoCarousel() {
                   <div key={index} className={styles.slide}>
                     <Image
                       src={slide.image}
-                      alt={slide.title}
+                      alt={`${slide.title} - ${slide.description}`}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 960px"
                       className="object-cover object-top"
                       priority={index === 0}
                     />
@@ -146,12 +147,15 @@ export default function DemoCarousel() {
             </div>
 
             <div className={styles.dots}>
-              {slides.map((_, index) => (
+              {slides.map((_, i) => (
                 <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={styles.dot(index === currentSlide)}
-                  aria-label={`Ir para slide ${index + 1}`}
+                  key={i}
+                  onClick={() => goToSlide(i)}
+                  className={`h-1 w-4 rounded-full origin-center transition-transform duration-300 ${
+                    i === currentSlide
+                      ? "bg-gradient-to-r from-[#0162b1] to-[#07a8da] scale-x-100"
+                      : "bg-dark-600 scale-x-50"
+                  }`}
                 />
               ))}
             </div>

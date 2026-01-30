@@ -3,6 +3,60 @@
 import { useState, FormEvent } from "react";
 import { contact as styles } from "@/styles/components";
 
+type FieldErrors = {
+  name?: string;
+  email?: string;
+  company?: string;
+  phone?: string;
+};
+
+function validateField(
+  field: keyof FieldErrors,
+  value: string,
+): string | undefined {
+  switch (field) {
+    case "name":
+      if (!value.trim()) return "Informe seu nome completo";
+      if (!/^[A-Za-zÀ-ÿ\s]+$/.test(value))
+        return "O nome não pode conter números ou símbolos";
+      return undefined;
+    case "email":
+      if (!value.trim()) return "Informe seu e-mail";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+        return "Informe um e-mail válido";
+      return undefined;
+    case "company":
+      if (!value.trim()) return "Informe o nome da empresa";
+      return undefined;
+    case "phone":
+      if (value && value.length > 0 && value.length < 11)
+        return "O celular deve conter 11 números";
+      return undefined;
+  }
+}
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+  return (
+    <p className="flex items-center gap-1.5 mt-1.5 text-xs text-red-400 animate-fade-in">
+      <svg
+        className="w-3.5 h-3.5 flex-shrink-0"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      {message}
+    </p>
+  );
+}
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -13,39 +67,61 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const handleBlur = (field: keyof FieldErrors) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    const error = validateField(field, formData[field]);
+    setFieldErrors((prev) => ({ ...prev, [field]: error }));
+  };
+
+  const handleChange = (field: keyof typeof formData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    // Limpa erro do campo ao digitar, se já foi tocado
+    if (touched[field]) {
+      const error = validateField(field as keyof FieldErrors, value);
+      setFieldErrors((prev) => ({ ...prev, [field]: error }));
+    }
+  };
+
+  const inputClass = (field: keyof FieldErrors) =>
+    `${styles.input} ${
+      touched[field] && fieldErrors[field]
+        ? "!border-red-500/60 !ring-red-500/30"
+        : touched[field] && !fieldErrors[field] && formData[field]
+          ? "!border-green-500/40"
+          : ""
+    }`;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError("");
+    setSubmitError("");
 
-    if (!formData.name.trim()) {
-      setError("Informe seu nome completo");
-      setIsSubmitting(false);
-      return;
+    // Valida todos os campos
+    const allFields: (keyof FieldErrors)[] = [
+      "name",
+      "email",
+      "company",
+      "phone",
+    ];
+    const newErrors: FieldErrors = {};
+    let hasError = false;
+
+    for (const field of allFields) {
+      const err = validateField(field, formData[field]);
+      if (err) {
+        newErrors[field] = err;
+        hasError = true;
+      }
     }
 
-    if (!/^[A-Za-zÀ-ÿ\s]+$/.test(formData.name)) {
-      setError("O nome não pode conter números ou símbolos");
-      setIsSubmitting(false);
-      return;
-    }
+    setFieldErrors(newErrors);
+    setTouched({ name: true, email: true, company: true, phone: true });
 
-    if (!formData.email.includes("@")) {
-      setError("Informe um e-mail válido");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!formData.company.trim()) {
-      setError("Informe o nome da empresa");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (formData.phone && formData.phone.length !== 11) {
-      setError("O telefone deve conter exatamente 11 números");
+    if (hasError) {
       setIsSubmitting(false);
       return;
     }
@@ -62,7 +138,7 @@ export default function Contact() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Erro ao enviar mensagem");
+        setSubmitError(data.error || "Erro ao enviar mensagem");
         return;
       }
 
@@ -74,8 +150,10 @@ export default function Contact() {
         phone: "",
         message: "",
       });
+      setFieldErrors({});
+      setTouched({});
     } catch (err) {
-      setError(
+      setSubmitError(
         "Não foi possível enviar a mensagem agora. Tente novamente em instantes.",
       );
       console.error(err);
@@ -192,7 +270,25 @@ export default function Contact() {
                   className={styles.form}
                   noValidate
                 >
-                  {error && <div className={styles.errorBox}>{error}</div>}
+                  {submitError && (
+                    <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm animate-fade-in">
+                      <svg
+                        className="w-5 h-5 flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <span>{submitError}</span>
+                    </div>
+                  )}
+
                   <div className={styles.inputGrid}>
                     <div>
                       <label htmlFor="name" className={styles.label}>
@@ -208,10 +304,14 @@ export default function Contact() {
                             /[^A-Za-zÀ-ÿ\s]/g,
                             "",
                           );
-                          setFormData({ ...formData, name: onlyLetters });
+                          handleChange("name", onlyLetters);
                         }}
-                        className={styles.input}
+                        onBlur={() => handleBlur("name")}
+                        className={inputClass("name")}
                         placeholder="Seu nome"
+                      />
+                      <FieldError
+                        message={touched.name ? fieldErrors.name : undefined}
                       />
                     </div>
                     <div>
@@ -223,11 +323,13 @@ export default function Contact() {
                         id="email"
                         required
                         value={formData.email}
-                        onChange={(e) =>
-                          setFormData({ ...formData, email: e.target.value })
-                        }
-                        className={styles.input}
+                        onChange={(e) => handleChange("email", e.target.value)}
+                        onBlur={() => handleBlur("email")}
+                        className={inputClass("email")}
                         placeholder="seu@empresa.com"
+                      />
+                      <FieldError
+                        message={touched.email ? fieldErrors.email : undefined}
                       />
                     </div>
                   </div>
@@ -243,15 +345,21 @@ export default function Contact() {
                         required
                         value={formData.company}
                         onChange={(e) =>
-                          setFormData({ ...formData, company: e.target.value })
+                          handleChange("company", e.target.value)
                         }
-                        className={styles.input}
+                        onBlur={() => handleBlur("company")}
+                        className={inputClass("company")}
                         placeholder="Nome da empresa"
+                      />
+                      <FieldError
+                        message={
+                          touched.company ? fieldErrors.company : undefined
+                        }
                       />
                     </div>
                     <div>
                       <label htmlFor="phone" className={styles.label}>
-                        Telefone
+                        Celular
                       </label>
                       <input
                         type="tel"
@@ -261,13 +369,14 @@ export default function Contact() {
                         value={formData.phone}
                         onChange={(e) => {
                           const onlyNumbers = e.target.value.replace(/\D/g, "");
-                          setFormData({
-                            ...formData,
-                            phone: onlyNumbers.slice(0, 11),
-                          });
+                          handleChange("phone", onlyNumbers.slice(0, 11));
                         }}
-                        className={styles.input}
+                        onBlur={() => handleBlur("phone")}
+                        className={inputClass("phone")}
                         placeholder="(00) 00000-0000"
+                      />
+                      <FieldError
+                        message={touched.phone ? fieldErrors.phone : undefined}
                       />
                     </div>
                   </div>
@@ -280,9 +389,7 @@ export default function Contact() {
                       id="message"
                       rows={4}
                       value={formData.message}
-                      onChange={(e) =>
-                        setFormData({ ...formData, message: e.target.value })
-                      }
+                      onChange={(e) => handleChange("message", e.target.value)}
                       className={styles.textarea}
                       placeholder="Conte-nos sobre suas necessidades..."
                     />

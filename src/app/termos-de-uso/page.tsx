@@ -1,10 +1,15 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { legal as styles } from "@/styles/components";
 
-export const metadata = {
-  title: "Termos de Uso - PREVISIOS",
-  description: "Termos de Uso da plataforma PREVISIOS",
+export const metadata: Metadata = {
+  title: "Termos de Uso",
+  description:
+    "Termos de Uso da plataforma PREVISIOS. Conheça as condições de uso dos nossos serviços de gestão inteligente de saneamento.",
+  alternates: {
+    canonical: "/termos-de-uso",
+  },
 };
 
 export default function TermosDeUso() {

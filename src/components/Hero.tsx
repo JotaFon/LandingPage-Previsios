@@ -18,7 +18,7 @@ export default function Hero() {
 
       <NeuralNetwork />
       <TechCircles />
-      <CodeParticles count={20} />
+      <CodeParticles count={8} />
 
       <WaterWaves />
 
@@ -111,7 +111,7 @@ export default function Hero() {
                 </svg>
               </div>
 
-              <div className="text-1xl md:text-2xl font-bold gradient-text mb-2">
+              <div className="text-lg md:text-2xl font-bold gradient-text mb-1 md:mb-2">
                 97%
               </div>
               <div className={styles.statLabel}>Precisão nas Previsões</div>
@@ -146,7 +146,7 @@ export default function Hero() {
                 </svg>
               </div>
 
-              <div className="text-1xl md:text-2xl font-bold gradient-text mb-2">
+              <div className="text-lg md:text-2xl font-bold gradient-text mb-1 md:mb-2">
                 ECONOMIA
               </div>
               <div className={styles.statLabel}>Redução de Gastos</div>
@@ -179,7 +179,7 @@ export default function Hero() {
                 </svg>
               </div>
 
-              <div className="text-1xl md:text-2xl font-bold gradient-text mb-2">
+              <div className="text-lg md:text-2xl font-bold gradient-text mb-1 md:mb-2">
                 24/7
               </div>
               <div className={styles.statLabel}>Monitoramento</div>
@@ -214,7 +214,7 @@ export default function Hero() {
                 </svg>
               </div>
 
-              <div className="text-1xl md:text-2xl font-bold gradient-text mb-2">
+              <div className="text-lg md:text-2xl font-bold gradient-text mb-1 md:mb-2">
                 IA
               </div>
               <div className={styles.statLabel}>Machine Learning</div>
